@@ -1,7 +1,7 @@
 **GradResearch AI** - PhD Application Email Generator\
 GradResearch AI is an intelligent agent that helps students draft personalized and compelling emails to professors for PhD admission. The system uses advanced web scraping and AI analysis to research professors, analyze alignment with the student's background, and generate highly personalized application emails.
 
-**Features**
+**Features**\
 🔍 Comprehensive Professor Research: Automatically extracts research information from multiple sources including Google Scholar, institutional profiles, and academic publications\
 📄 CV Analysis: Processes and analyzes your CV to extract relevant skills, experience, and projects\
 🎯 Research Alignment Analysis: Analyzes the alignment between your background and the professor's research interests\
@@ -9,52 +9,49 @@ GradResearch AI is an intelligent agent that helps students draft personalized a
 🔗 Position Requirements Extraction: Automatically extracts requirements from PhD position postings\
 🌐 Flexible Web Scraping: Uses Firecrawl API with fallback to BeautifulSoup for maximum compatibility\
 💾 Session Management: Saves research sessions and chat history for future reference\
-**Prerequisites**
+**Prerequisites**\
 Before you begin, ensure you have the following installed:
 
 Python 3.10 or higher\
 Google API Key (for Gemini AI model)\
 Firecrawl API Key (for web scraping) - Optional but recommended\
 Git (for version control)\
-**Installation**
-**1. Clone the Repository**
-git clone https://github.com/yourusername/gradresearch-ai.git \
+**Installation**\
+**1. Clone the Repository**\
+git clone https://github.com/mdsazzathossain1/GradResearch_AI.git \
 cd gradresearch-ai\
-**2. Create and Activate Virtual Environment**
+**2. Create and Activate Virtual Environment**\
 On Windows:\
-Create virtual environment\
-python -m venv venv
-
-**Activate virtual environment**
+python -m venv venv 
+**Activate virtual environment**\
 venv\Scripts\activate
 On macOS/Linux:
-Create virtual environment\
 python3 -m venv venv
 
 Activate virtual environment\
 source venv/bin/activate
 
-**3. Upgrade pip and Install Dependencies**
+**3. Upgrade pip and Install Dependencies**\
 Upgrade pip to the latest version\
 pip install --upgrade pip
 
 Install all required dependencies\
 pip install -r requirements.tx
 
-**4. Set Up Environment Variables**
-Create a .env file in the root directory of the project:
-On Windows:
+**4. Set Up Environment Variables**\
+Create a .env file in the root directory of the project:\
+On Windows:\
 Create .env file\
 echo. > .env
-On macOS/Linux:
+On macOS/Linux:\
 Create .env file\
 touch .env
 
-**Add the following environment variables to your .env file:**
+**Add the following environment variables to your .env file:**\
 GOOGLE_API_KEY=your_google_api_key_here\
-FIRECRAWL_API_KEY=your_firecrawl_api_key_here\
+FIRECRAWL_API_KEY=your_firecrawl_api_key_here
 
-**Getting API Keys:**
+**Getting API Keys:**\
 Google API Key:
 Go to Google AI Studio\
 Create a new API key for the Gemini model\
@@ -75,17 +72,17 @@ gradresearch-ai\
 ├── model.py            # AI model configuration\
 ├── system_prompt.py    # System prompt for the AI\
 └── templates/          # HTML templates\
-**Usage**
+**Usage**\
 **Starting the Application**
-Make sure your virtual environment is activated before running:
-**On Windows:**
+Make sure your virtual environment is activated before running:\
+**On Windows:**\
 venv\Scripts\activate
 
-**On macOS/Linux:**
-source venv/bin/activate\
+**On macOS/Linux:**\
+source venv/bin/activate
 
 **Run the FastAPI application**\
-python main.py 
+python main.py \
 **The application will start on http://localhost:8000**\
 
 **Using the Web Interface**
@@ -164,7 +161,6 @@ git commit -m 'Add some amazing feature'
 9. Push to the branch
 git push origin feature/amazing-feature
 10. Open a Pull Request
-
 **Acknowledgments**\
 **LangChain** for the AI framework\
 **FastAPI** for the web framework\
@@ -177,21 +173,17 @@ If you have any questions or suggestions, please open an issue on GitHub or cont
 **Quick Start Summary**\
 For those who want to get started quickly:\
 **Clone and navigate**\
-git clone https://github.com/yourusername/gradresearch-ai.git 
-cd gradresearch-ai
-Create and activate virtual environment
-python -m venv venv
-Windows: venv\Scripts\activate
-macOS/Linux: source venv/bin/activate
-
+git clone https://github.com/mdsazzathossain1/GradResearch_AI.git\
+cd gradresearch-ai\
+Create and activate virtual environment\
+python -m venv venv\
+Windows: venv\Scripts\activate\
+macOS/Linux: source venv/bin/activate\
 Install dependencies\
-pip install -r requirements.txt
-
+pip install -r requirements.txt\
 Set up environment variables\
-echo GOOGLE_API_KEY=your_key_here > .env
-
-Add your CV as cv.pdf
-
-Run the application
+echo GOOGLE_API_KEY=your_key_here > .env\
+Add your CV as cv.pdf\
+Run the application\
 python main.py
 
