@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GradReach AI - PhD Application Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #f8f9fa;
+            --accent-color: #3f37c9;
+            --text-color: #212529;
+            --light-gray: #f1f3f5;
+            --border-color: #dee2e6;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --warning-color: #f8961e;
+            --info-color: #4cc9f0;
+            --thinking-bg: #f8f9fa;
+            --thinking-border: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+        
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo i {
+            font-size: 28px;
+            color: var(--primary-color);
+        }
+        
+        .logo .title-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .logo .subtitle {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6c757d;
+            margin-top: -2px;
+        }
+        
+        .new-chat-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 16px;
+            transition: background-color 0.2s;
+        }
+        
+        .new-chat-btn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .history-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 0 8px;
+        }
+        
+        .history-item {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        
+        .history-item:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .history-item.active {
+            background-color: var(--light-gray);
+            font-weight: 500;
+        }
+        
+        .history-item-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+        
+        .sidebar-footer {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .creator-credit {
+            font-size: 11px;
+            color: #adb5bd;
+        }
+        
+        .clear-history-btn {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .clear-history-btn:hover {
+            background-color: #fff5f7;
+        }
+        
+        .toggle-sidebar {
+            display: none;
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 101;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            width: 40px;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background-color: white;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .session-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .session-id {
+            font-size: 14px;
+            color: #6c757d;
+            background-color: var(--light-gray);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        
+        .info-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-color);
+            transition: background-color 0.2s;
+        }
+        
+        .info-toggle:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .info-panel {
+            background-color: #fff9db;
+            border-bottom: 1px solid #ffd43b;
+            padding: 16px 24px;
+            font-size: 14px;
+            line-height: 1.5;
+            display: none;
+        }
+        
+        .info-panel.active {
+            display: block;
+        }
+        
+        .info-panel h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: var(--warning-color);
+        }
+        
+        .info-panel p {
+            margin-bottom: 8px;
+        }
+        
+        .info-panel strong {
+            color: var(--warning-color);
+        }
+        
+        .chat-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            background-color: white;
+        }
+        
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            max-width: 80%;
+        }
+        
+        .message.user {
+            margin-left: auto;
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .message.user .message-avatar {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .message.bot .message-avatar {
+            background-color: var(--light-gray);
+            color: var(--text-color);
+        }
+        
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 18px;
+            background-color: var(--light-gray);
+            position: relative;
+        }
+        
+        .message.user .message-content {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: #6c757d;
+            margin-top: 4px;
+            text-align: right;
+        }
+        
+        .message.user .message-time {
+            text-align: left;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 12px;
+        }
+        
+        .typing-indicator .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light-gray);
+            color: var(--text-color);
+        }
+        
+        .typing-dots {
+            background-color: var(--light-gray);
+            padding: 12px 16px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .typing-dots span {
+            height: 8px;
+            width: 8px;
+            background-color: #6c757d;
+            border-radius: 50%;
+            display: inline-block;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dots span:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-5px);
+                opacity: 1;
+            }
+        }
+        
+        .input-container {
+            background-color: white;
+            border-top: 1px solid var(--border-color);
+            padding: 16px 24px;
+        }
+        
+        .input-area {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            background-color: var(--light-gray);
+            border-radius: 24px;
+            padding: 8px 16px;
+            border: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        .input-area:focus-within {
+            border-color: var(--primary-color);
+        }
+        
+        #message-input {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            padding: 12px 0;
+            font-size: 15px;
+            resize: none;
+            max-height: 120px;
+            line-height: 1.4;
+        }
+        
+        .send-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            flex-shrink: 0;
+        }
+        
+        .send-button:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .send-button:active {
+            transform: scale(0.95);
+        }
+        
+        .send-button:disabled {
+            background-color: #adb5bd;
+            cursor: not-allowed;
+        }
+        
+        /* Thinking Panel Styles */
+        .thinking-container {
+            margin-bottom: 20px;
+            border: 1px solid var(--thinking-border);
+            border-radius: 12px;
+            background-color: var(--thinking-bg);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            max-width: 80%;
+            margin-left: 48px;
+        }
+        
+        .thinking-header {
+            padding: 12px 16px;
+            background-color: var(--thinking-bg);
+            border-bottom: 1px solid var(--thinking-border);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+        
+        .thinking-header:hover {
+            background-color: #e9ecef;
+        }
+        
+        .thinking-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .thinking-icon {
+            color: var(--primary-color);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .thinking-toggle {
+            font-size: 14px;
+            color: #6c757d;
+            transition: transform 0.3s ease;
+        }
+        
+        .thinking-container.expanded .thinking-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .thinking-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background-color: white;
+        }
+        
+        .thinking-container.expanded .thinking-content {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .thinking-inner {
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #495057;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .thinking-section {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--thinking-border);
+        }
+        
+        .thinking-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .thinking-section-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .thinking-section-content {
+            color: #495057;
+        }
+        
+        .research-logs {
+            background-color: #fff3cd;
+            border-left: 4px solid var(--warning-color);
+            padding: 12px;
+            margin: 8px 0;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            border-radius: 4px;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            border-left: 4px solid var(--danger-color);
+            padding: 12px;
+            margin: 8px 0;
+            color: #721c24;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            border-radius: 4px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100%;
+                transform: translateX(-100%);
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .toggle-sidebar {
+                display: flex;
+            }
+            
+            .main-content {
+                width: 100%;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .thinking-container {
+                max-width: 90%;
+                margin-left: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <button class="toggle-sidebar" id="toggle-sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div class="title-group">
+                        <h1>GradReach AI</h1>
+                        <p class="subtitle">PhD Application Email Assistant</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="new-chat-btn" id="new-session">
+                <i class="fas fa-plus"></i>
+                New Chat
+            </button>
+            
+            <div class="history-list" id="history-list">
+                <!-- History items will be added here dynamically -->
+            </div>
+            
+            <div class="sidebar-footer">
+                 <p class="creator-credit">Built by Md Sazzat Hossain</p>
+                <button class="clear-history-btn" id="clear-history">
+                    <i class="fas fa-trash-alt"></i>
+                    Clear History
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="chat-header">
+                <div class="session-info">
+                    <div class="session-id">Session: <span id="session-id">Loading...</span></div>
+                </div>
+                <button class="info-toggle" id="info-toggle">
+                    <i class="fas fa-info-circle"></i>
+                    Instructions
+                </button>
+            </div>
+            
+            <div class="info-panel" id="info-panel">
+                <h3>Welcome to GradReach AI!</h3>
+                <p>To get started, please ensure your CV is uploaded as <strong>cv.pdf</strong> in the project folder.</p>
+                <p><strong>Example prompt:</strong> "Draft an email to Professor [Professor's Name] from [University Name] about a PhD position. Here is their Google Scholar ID: [ID]. My CV is already provided."</p>
+            </div>
+            
+            <div class="chat-container" id="chat-box">
+                <!-- Messages will be added here dynamically -->
+            </div>
+            
+            <div class="input-container">
+                <div class="input-area">
+                    <textarea id="message-input" placeholder="Type your message here..." rows="1"></textarea>
+                    <button class="send-button" id="send-button" aria-label="Send Message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let threadId = null;
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const chatBox = document.getElementById('chat-box');
+        const sessionIdElement = document.getElementById('session-id');
+        const historyList = document.getElementById('history-list');
+        const sidebar = document.getElementById('sidebar');
+        const toggleSidebarBtn = document.getElementById('toggle-sidebar');
+        const infoPanel = document.getElementById('info-panel');
+        const infoToggleBtn = document.getElementById('info-toggle');
+        
+        // Toggle sidebar
+        toggleSidebarBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+        
+        // Toggle info panel
+        infoToggleBtn.addEventListener('click', () => {
+            infoPanel.classList.toggle('active');
+        });
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(e.target) && 
+                !toggleSidebarBtn.contains(e.target) && 
+                sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+            }
+        });
+        
+        async function startSession() {
+            try {
+                const response = await fetch('/start_session', { method: 'POST' });
+                const data = await response.json();
+                threadId = data.thread_id;
+                sessionIdElement.textContent = threadId;
+                chatBox.innerHTML = '';
+                addBotMessage("New session started. How can I help you today?");
+                updateHistoryList();
+            } catch (error) {
+                console.error('Error starting session:', error);
+                addBotMessage('Could not start a new session. Please check your connection or the server.');
+            }
+        }
+        
+        async function loadSession(sessionId) {
+            try {
+                const response = await fetch(`/load_session/${sessionId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    threadId = data.thread_id;
+                    sessionIdElement.textContent = threadId;
+                    chatBox.innerHTML = '';
+                    
+                    data.messages.forEach(msg => {
+                        if (msg.type === 'human') {
+                            addUserMessage(msg.content);
+                        } else {
+                            addBotMessage(msg.content, [], []); // Empty arrays for logs and errors
+                        }
+                    });
+                    
+                    // Update active state in history
+                    document.querySelectorAll('.history-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    const currentItem = document.querySelector(`[data-session-id="${sessionId}"]`);
+                    if (currentItem) {
+                        currentItem.classList.add('active');
+                    }
+                    
+                    // Close sidebar on mobile
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('open');
+                    }
+                } else {
+                    alert('Failed to load session');
+                }
+            } catch (error) {
+                console.error('Error loading session:', error);
+                alert('Could not load the session. Please check the console for more details.');
+            }
+        }
+        
+        function showTypingIndicator() {
+            const indicatorDiv = document.createElement('div');
+            indicatorDiv.className = 'typing-indicator';
+            indicatorDiv.id = 'typing-indicator';
+            indicatorDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+            chatBox.appendChild(indicatorDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+        
+        function addUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div class="message-content">${text.replace(/\n/g, '<br>')}</div>
+                    <div class="message-time">${timeString}</div>
+                </div>
+            `;
+            
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        function addBotMessage(text, researchLogs = [], webResearchErrors = []) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <div class="message-content">${text.replace(/\n/g, '<br>')}</div>
+                    <div class="message-time">${timeString}</div>
+                </div>
+            `;
+            
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            // Add thinking panel if there are research logs or errors
+            if ((researchLogs && researchLogs.length > 0) || (webResearchErrors && webResearchErrors.length > 0)) {
+                setTimeout(() => {
+                    addThinkingPanel(researchLogs, webResearchErrors);
+                }, 100);
+            }
+        }
+        
+        function addThinkingPanel(researchLogs, webResearchErrors) {
+            // Ensure we have valid arrays
+            researchLogs = researchLogs || [];
+            webResearchErrors = webResearchErrors || [];
+            
+            // Only create panel if there's content to show
+            if (researchLogs.length === 0 && webResearchErrors.length === 0) {
+                return;
+            }
+            
+            const thinkingContainer = document.createElement('div');
+            thinkingContainer.className = 'thinking-container';
+            
+            const thinkingId = 'thinking-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+            thinkingContainer.id = thinkingId;
+            
+            let thinkingContent = '';
+            
+            // Add research logs
+            if (researchLogs.length > 0) {
+                researchLogs.forEach(log => {
+                    if (typeof log === 'string') {
+                        if (log.includes('=== COMPREHENSIVE RESEARCH PROFILE ===')) {
+                            thinkingContent += `
+                                <div class="thinking-section">
+                                    <div class="thinking-section-title">🔍 Professor Research</div>
+                                    <div class="thinking-section-content research-logs">${escapeHtml(log)}</div>
+                                </div>
+                            `;
+                        } else if (log.includes('=== PhD POSITION REQUIREMENTS ===')) {
+                            thinkingContent += `
+                                <div class="thinking-section">
+                                    <div class="thinking-section-title">📋 Position Requirements</div>
+                                    <div class="thinking-section-content research-logs">${escapeHtml(log)}</div>
+                                </div>
+                            `;
+                        } else if (log.includes('=== RESEARCH ALIGNMENT ANALYSIS ===')) {
+                            thinkingContent += `
+                                <div class="thinking-section">
+                                    <div class="thinking-section-title">📊 Research Alignment</div>
+                                    <div class="thinking-section-content research-logs">${escapeHtml(log)}</div>
+                                </div>
+                            `;
+                        } else if (log.includes('=== EMAIL GENERATION ===')) {
+                            thinkingContent += `
+                                <div class="thinking-section">
+                                    <div class="thinking-section-title">✉️ Email Generation</div>
+                                    <div class="thinking-section-content research-logs">${escapeHtml(log)}</div>
+                                </div>
+                            `;
+                        } else if (log.includes('=== PROFESSOR RESEARCH ===')) {
+                            thinkingContent += `
+                                <div class="thinking-section">
+                                    <div class="thinking-section-title">🔍 Professor Research</div>
+                                    <div class="thinking-section-content research-logs">${escapeHtml(log)}</div>
+                                </div>
+                            `;
+                        } else if (log.includes('=== SCHOLAR PROFILE ===')) {
+                            thinkingContent += `
+                                <div class="thinking-section">
+                                    <div class="thinking-section-title">🎓 Scholar Profile</div>
+                                    <div class="thinking-section-content research-logs">${escapeHtml(log)}</div>
+                                </div>
+                            `;
+                        } else if (log.includes('=== PROFESSOR INFO ===')) {
+                            thinkingContent += `
+                                <div class="thinking-section">
+                                    <div class="thinking-section-title">👨‍🏫 Professor Info</div>
+                                    <div class="thinking-section-content research-logs">${escapeHtml(log)}</div>
+                                </div>
+                            `;
+                        } else if (log.includes('=== PAPER INFO ===')) {
+                            thinkingContent += `
+                                <div class="thinking-section">
+                                    <div class="thinking-section-title">📄 Paper Info</div>
+                                    <div class="thinking-section-content research-logs">${escapeHtml(log)}</div>
+                                </div>
+                            `;
+                        } else if (log.includes('=== PROGRAM INFO ===')) {
+                            thinkingContent += `
+                                <div class="thinking-section">
+                                    <div class="thinking-section-title">🎓 Program Info</div>
+                                    <div class="thinking-section-content research-logs">${escapeHtml(log)}</div>
+                                </div>
+                            `;
+                        } else if (log.includes('=== UNIVERSITY INFO ===')) {
+                            thinkingContent += `
+                                <div class="thinking-section">
+                                    <div class="thinking-section-title">🏛️ University Info</div>
+                                    <div class="thinking-section-content research-logs">${escapeHtml(log)}</div>
+                                </div>
+                            `;
+                        } else if (log.includes('=== DEPARTMENT INFO ===')) {
+                            thinkingContent += `
+                                <div class="thinking-section">
+                                    <div class="thinking-section-title">🏢 Department Info</div>
+                                    <div class="thinking-section-content research-logs">${escapeHtml(log)}</div>
+                                </div>
+                            `;
+                        } else {
+                            thinkingContent += `
+                                <div class="thinking-section">
+                                    <div class="thinking-section-title">📝 Research Notes</div>
+                                    <div class="thinking-section-content research-logs">${escapeHtml(log)}</div>
+                                </div>
+                            `;
+                        }
+                    }
+                });
+            }
+            
+            // Add web research errors
+            if (webResearchErrors.length > 0) {
+                thinkingContent += `
+                    <div class="thinking-section">
+                        <div class="thinking-section-title">⚠️ Research Errors</div>
+                        <div class="thinking-section-content">
+                `;
+                
+                webResearchErrors.forEach(error => {
+                    thinkingContent += `<div class="error-message">• ${escapeHtml(error)}</div>`;
+                });
+                
+                thinkingContent += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            thinkingContainer.innerHTML = `
+                <div class="thinking-header" onclick="toggleThinking('${thinkingId}')">
+                    <div class="thinking-title">
+                        <i class="fas fa-brain thinking-icon"></i>
+                        <span>Agent is thinking...</span>
+                    </div>
+                    <i class="fas fa-chevron-down thinking-toggle"></i>
+                </div>
+                <div class="thinking-content">
+                    <div class="thinking-inner">
+                        ${thinkingContent}
+                    </div>
+                </div>
+            `;
+            
+            chatBox.appendChild(thinkingContainer);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        // Helper function to escape HTML
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+        
+        // Global function to toggle thinking panel
+        window.toggleThinking = function(thinkingId) {
+            const thinkingContainer = document.getElementById(thinkingId);
+            if (thinkingContainer) {
+                thinkingContainer.classList.toggle('expanded');
+            }
+        };
+        
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            if (!threadId) {
+                alert("Session not started. Please refresh the page.");
+                return;
+            }
+            
+            addUserMessage(message);
+            messageInput.value = '';
+            adjustInputHeight();
+            toggleSendButton();
+            
+            showTypingIndicator();
+            
+            try {
+                const formData = new FormData();
+                formData.append('thread_id', threadId);
+                formData.append('message', message);
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                removeTypingIndicator();
+                const botResponse = data.response || data.error || "Sorry, something went wrong.";
+                const researchLogs = data.research_logs || [];
+                const webResearchErrors = data.web_research_errors || [];
+                addBotMessage(botResponse, researchLogs, webResearchErrors);
+                await updateHistoryList();
+            } catch (error) {
+                console.error('Error sending message:', error);
+                removeTypingIndicator();
+                addBotMessage("Sorry, I couldn't connect to the server.");
+            }
+        }
+        
+        async function updateHistoryList() {
+            try {
+                const response = await fetch('/sessions');
+                if (response.ok) {
+                    const data = await response.json();
+                    historyList.innerHTML = '';
+                    
+                    if (data.sessions.length === 0) {
+                        historyList.innerHTML = '<div style="padding: 16px; text-align: center; color: #6c757d;">No chat history</div>';
+                        return;
+                    }
+                    
+                    // Reverse the list to show newest on top
+                    data.sessions.reverse().forEach(session => {
+                        const item = document.createElement('div');
+                        item.className = 'history-item';
+                        if (session.id === threadId) {
+                            item.classList.add('active');
+                        }
+                        item.setAttribute('data-session-id', session.id);
+                        
+                        // Make entire item clickable
+                        item.addEventListener('click', () => loadSession(session.id));
+                        
+                        item.innerHTML = `
+                            <div class="history-item-title">${session.title}</div>
+                            <i class="fas fa-folder-open" style="color: #adb5bd; font-size: 14px;"></i>
+                        `;
+                        
+                        historyList.appendChild(item);
+                    });
+                }
+            } catch (error) {
+                console.error('Error updating history list:', error);
+            }
+        }
+        
+        async function clearHistory() {
+            if (confirm('Are you sure you want to clear all chat history?')) {
+                try {
+                    await fetch('/clear_history', { method: 'POST' });
+                    await startSession();
+                } catch (error) {
+                    console.error('Error clearing history:', error);
+                    alert('Could not clear history. Please check the console for more details.');
+                }
+            }
+        }
+        
+        const adjustInputHeight = () => {
+            messageInput.style.height = 'auto';
+            messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
+        };
+        
+        const toggleSendButton = () => {
+            sendButton.disabled = messageInput.value.trim() === '';
+        };
+        
+        sendButton.addEventListener('click', sendMessage);
+        
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        messageInput.addEventListener('input', () => {
+            adjustInputHeight();
+            toggleSendButton();
+        });
+        
+        document.getElementById('new-session').addEventListener('click', startSession);
+        document.getElementById('clear-history').addEventListener('click', clearHistory);
+        
+        window.onload = () => {
+            startSession();
+            toggleSendButton();
+        };
+    </script>
+</body>
+</html>
