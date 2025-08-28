@@ -121,7 +121,7 @@ Check that your CV is properly formatted and named\
 Review the troubleshooting steps above\
 **Debug Mode**
 For debugging, you can run the application with verbose logging:\
-# Run with verbose output
+**Run with verbose output**
 uvicorn main:app --host 0.0.0.0 --port 8000 --log-level debug\
 
 **Customization**
