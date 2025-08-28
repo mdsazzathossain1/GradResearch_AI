@@ -65,8 +65,8 @@ Sign up and get an API key\
 Add it to your .env file\
 **5. Prepare Your CV**\
 Place your CV in PDF format in the root directory of the project and name it cv.pdf. The system will automatically load and process your CV when you start a session.
-Then the project structure will be like:
-gradresearch-ai/
+Then the project structure will be like:\
+gradresearch-ai\
 ├── cv.pdf              # Your CV file\
 ├── .env                 # Environment variables\
 ├── requirements.txt     # Python dependencies\
@@ -172,29 +172,26 @@ git push origin feature/amazing-feature
 **Google Gemini** for the AI model\
 
 **Contact**
-If you have any questions or suggestions, please open an issue on GitHub or contact the project maintainer.\
+If you have any questions or suggestions, please open an issue on GitHub or contact the project maintainer.
 
 **Quick Start Summary**\
 For those who want to get started quickly:\
 **Clone and navigate**\
-git clone https://github.com/yourusername/gradresearch-ai.git \
-cd gradresearch-ai\
-Create and activate virtual environment\
-python -m venv venv\
-Windows: venv\Scripts\activate\
-macOS/Linux: source venv/bin/activate\
+git clone https://github.com/yourusername/gradresearch-ai.git 
+cd gradresearch-ai
+Create and activate virtual environment
+python -m venv venv
+Windows: venv\Scripts\activate
+macOS/Linux: source venv/bin/activate
 
 Install dependencies\
-pip install -r requirements.txt\
+pip install -r requirements.txt
 
 Set up environment variables\
-echo GOOGLE_API_KEY=your_key_here > .env\
+echo GOOGLE_API_KEY=your_key_here > .env
 
-Add your CV as cv.pdf\
+Add your CV as cv.pdf
 
 Run the application
 python main.py
 
-python -m venv venv
-On Windows: venv\Scripts\activate
-On macOS/Linux: source venv/bin/activate
